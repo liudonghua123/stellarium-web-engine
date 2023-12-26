@@ -2,11 +2,14 @@
 <title>Stellarium Web Engine Test Page</title>
 <meta charset="utf-8">
 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+<script src="https://www.unpkg.com/jquery@2.2.0/dist/jquery.min.js"></script>
 <script src="static/js/polyfill.js"></script>
 <script src="../../build/stellarium-web-engine.js"></script>
-<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<!-- https://unpkg.com/browse/vue@2.7.16/dist/ -->
+<script src="https://unpkg.com/vue@2.7.16/dist/vue.js"></script>
+<!-- https://unpkg.com/browse/vue@3.3.13/dist/ -->
+<!-- <script src="https://unpkg.com/vue@3.3.13/dist/vue.global.js"></script> -->
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
 
@@ -26,6 +29,7 @@
 
     <div id="gui" class="w-100 h-100 position-relative click-through">
       <div id="bottom-bar"
+           v-if="stel!==null"
            class="position-absolute d-flex justify-content-center w-100 get-click"
            style="bottom: 0;">
         <stel-button label="Constellations"
@@ -71,6 +75,7 @@
       </div>
 
       <pre id="right-bar get-click"
+           v-if="stel!==null"
            class="position-absolute text-danger"
            style="right: 0; font-size: 0.5rem;">
           {{JSON.stringify(stel.getTree(), null, 2)}}
@@ -80,9 +85,9 @@
 
         <form class="form-inline bg-info">
           <label class="mr-sm-2">UTC MJD</label>
-          <input type="number" class="form-control"
+          <input type="number" class="form-control" v-if="stel!==null"
                  v-model.number="stel.observer.utc">
-          <span> FPS: {{stel.core.fps.toFixed(0)}}</span>
+          <span v-if="stel!==null"> FPS: {{stel.core.fps.toFixed(0)}}</span>
         </form>
 
         <!--
@@ -99,7 +104,7 @@
         </stel-photoitem>
         -->
 
-        <test-shapes></test-shapes>
+        <test-shapes v-if="stel!==null"></test-shapes>
 
         <button class="btn btn-primary" v-on:click="testAddStar">
             Test add star
@@ -117,7 +122,7 @@
             Lock to selection
         </button>
 
-        <stel-progressbars :bars="stel.core.progressbars"></stel-progressbars>
+        <stel-progressbars v-if="stel!==null" :bars="stel.core.progressbars"></stel-progressbars>
 
       </div>
     </div>
@@ -170,7 +175,7 @@
     data: function() {
       return {
         obj: null,
-        layer: stel.createLayer({id: 'layerPhoto', z: 7, visible: true}),
+        layer: app.stel.createLayer({id: 'layerPhoto', z: 7, visible: true}),
       }
     },
     computed: {
@@ -331,13 +336,14 @@
           core.planets.addDataSource({ url: baseUrl + 'surveys/sso/moon', key: 'default' })
           core.comets.addDataSource({ url: baseUrl + 'CometEls.txt', key: 'mpc_comets' })
           core.satellites.addDataSource({ url: baseUrl + 'tle_satellite.jsonl.gz', key: 'jsonl/sat' })
+          
+          // Force ui update when there is any change.
+          // stel.change(function(obj, attr) {
+          //   if (attr !== "hovered")
+          //     app.stel = Object.assign(Object.create(stel), {}, stel)
+          // })
         }
       });
-      // Force ui update when there is any change.
-      stel.change(function(obj, attr) {
-        if (attr !== "hovered")
-          app.stel = Object.assign(Object.create(stel), {}, stel)
-      })
     }
   })
 
@@ -472,7 +478,7 @@
     template: '#test-shapes-template',
     data: function() {
       return {
-        layer: stel.createLayer({id: 'testLayerShape', z: 41, visible: true}),
+        layer: app.stel.createLayer({id: 'testLayerShape', z: 41, visible: true}),
         shapes: []
       }
     },
