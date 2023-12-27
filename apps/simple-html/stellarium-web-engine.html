@@ -133,10 +133,10 @@
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.js"></script>
-<script src="https://unpkg.com/i18next/dist/umd/i18next.min.js"></script>
-<script src="https://www.unpkg.com/i18next-xhr-backend/dist/umd/i18nextXHRBackend.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+<script src="https://unpkg.com/i18next@23.7.11/dist/umd/i18next.min.js"></script>
+<script src="https://www.unpkg.com/i18next-xhr-backend@3.2.2/dist/umd/i18nextXHRBackend.min.js"></script>
 <script src="../../build/stellarium-web-engine.js"></script>
 
 <!-- Button component -->
@@ -173,6 +173,7 @@
     lng: 'en',
     ns: ['gui', 'skyculture'],
     debug: false,
+    // TODO: the cdn is broken (/i18n/v1/gui/en.json, /i18n/v1/skyculture/en.json, /i18n/v1/skyculture/dev.json, /i18n/v1/gui/dev.json), need to fix use some methods
     backend: {
       loadPath: 'https://stellarium.sfo2.cdn.digitaloceanspaces.com/' +
                 'i18n/v1/{{ns}}/{{lng}}.json'
@@ -225,6 +226,7 @@
           stel.change(function(obj, attr) {
             if (attr !== "hovered") {
               that.stel = Object.assign(Object.create(stel), {}, stel)
+            }
           })
 
           stel.setFont('regular', 'static/fonts/Roboto-Regular.ttf', 1.38);
