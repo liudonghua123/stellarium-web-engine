@@ -41,7 +41,7 @@ jobs:
         working-directory: apps/web-frontend
       - name: Building ...
         run: |
-          NODE_OPTIONS=--openssl-legacy-provider CDN_ENV=${{env.PUBLICPATH}} npm run build
+          NODE_OPTIONS=--openssl-legacy-provider VUE_APP_PUBLIC_PATH=${{env.PUBLICPATH}} npm run build
           pwd && ls -la dist
           # fix https://github.com/peaceiris/actions-gh-pages/issues/892#issuecomment-1870004268 temporary
           touch dist/.nojekyll
