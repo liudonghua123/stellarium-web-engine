@@ -1,6 +1,6 @@
 module.exports = {
   runtimeCompiler: true,
-  publicPath: process.env.CDN_ENV ? process.env.CDN_ENV : '/',
+  publicPath: process.env.VUE_APP_PUBLIC_PATH ? process.env.VUE_APP_PUBLIC_PATH : '/',
 
   chainWebpack: config => {
     // workaround taken from webpack/webpack#6642
